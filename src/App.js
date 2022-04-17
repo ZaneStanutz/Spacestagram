@@ -16,8 +16,8 @@ return (
 }
 
 function Feed(){
-  const [start, setStart] = useState("2022-01-01");
-  const[end, setEnd] = useState("2022-03-01");
+  const [startDate, setStart] = useState("2022-01-01");
+  const[endDate, setEnd] = useState("2022-03-01");
   const[data, setData] = useState(null);
   
   function handleSubmit(){
@@ -30,37 +30,37 @@ function Feed(){
   }
   
   useEffect(() => {
-    fetch(`https://api.nasa.gov/planetary/apod?api_key=e8K3ePSnMPazfDhsoTb4hJwJiu3yO3gCIY2zd6cb&start_date=${start}&end_date=${end}`)
+    fetch(`https://api.nasa.gov/planetary/apod?api_key=e8K3ePSnMPazfDhsoTb4hJwJiu3yO3gCIY2zd6cb&start_date=${startDate}&end_date=${endDate}`)
       .then(res => res.json())
       .then(setData)
       .catch(console.error);
-  },[]); 
+  },[startDate, endDate]); 
   if(data){
     return(
       <>
-        <form onSubmit={handleSubmit}>
-              <label>Start Year</label>
-              <input 
-                id='start' 
-                type="date" 
-                name="start" 
-                value={start} 
-                placeholder="yy-mm-dd" 
-                required/>
-              <label>End Year</label>
-              <input 
-                id='end' 
-                type="date" 
-                name="end"
-                value={end}
-                placeholder="yy-mm-dd" 
-                required/>
-              <button type='submit'>Find pictures</button>
+        <div>
+          <form onSubmit={handleSubmit}>
+            <label>Start Year</label>
+            <input 
+              id='start' 
+              type="date" 
+              name="start" 
+              value={startDate} 
+              placeholder="yy-mm-dd" 
+              required/>
+            <label>End Year</label>
+            <input 
+              id='end' 
+              type="date" 
+              name="end"
+              value={endDate}
+              placeholder="yy-mm-dd" 
+              required/>
+            <button type='submit'>Find pictures</button>
           </form>
+        </div>
         <div className="Feed">
-          <img className="FeedImg"src={data.hdurl}></img>
-          <h3>{data.title}</h3><p>{data.date}</p>
-          <p>{data.explanation}</p>
+          <h1>{JSON.stringify(data)}</h1>
         </div>
       </>
     )
@@ -73,7 +73,7 @@ function Feed(){
               id='start' 
               type="date" 
               name="start" 
-              value={start} 
+              value={startDate} 
               placeholder="yy-mm-dd" 
               required/>
             <label>End Year</label>
@@ -81,7 +81,7 @@ function Feed(){
               id='end' 
               type="date" 
               name="end"
-              value={end}
+              value={endDate}
               placeholder="yy-mm-dd" 
               required/>
             <button type='submit'>Find pictures</button>
@@ -92,7 +92,6 @@ function Feed(){
     )
   }
 }
-
 
 function App() {
   return (
