@@ -14,12 +14,22 @@ return (
     </>
   )
 }
-function Feed(){}
+class Feed extends React.Component{
+  render(){
+  return(
+    <div>
+      <h3>{this.props.title}</h3>
+      <img src={this.props.url}></img>
+      <p>{this.props.explanation}</p>
+    </div>
+  )
+  }
+}
 
 class Form extends React.Component{
   constructor(props){
   super(props);
-  this.state = {startDate: '', endDate: '', data: null };
+  this.state = {startDate: '', endDate: '', data: {status: "Search for some dates"} };
   this.handleStart = this.handleStart.bind(this);
   this.handleEnd = this.handleEnd.bind(this);
   this.handleSubmit = this.handleSubmit.bind(this);
@@ -34,12 +44,17 @@ class Form extends React.Component{
 
   handleSubmit(event){
     fetch(`https://api.nasa.gov/planetary/apod?api_key=e8K3ePSnMPazfDhsoTb4hJwJiu3yO3gCIY2zd6cb&start_date=${this.state.startDate}&end_date=${this.state.endDate}`)
-      .then(res => this.setState({ data: res.json()}))
-      .then(alert(this.props))
+      .then(res => res.json())
+			.then(data => this.setState({data: data}))
       .catch(console.error);
     event.preventDefault();
   }
   render() {
+		const response = this.state.data;
+		const arr = [];
+		Object.keys(response).forEach(function(key){
+			arr.push(response[key]);
+		});
   return(
     <div>
       <form onSubmit={this.handleSubmit}>
@@ -62,10 +77,12 @@ class Form extends React.Component{
           placeholder="yyyy-mm-dd" 
           required/>
         <button type='submit'>Find pictures</button>
-        <div>{}
-        </div>
-      </form>
-    </div>
+       
+    	</form>
+				{
+					arr.map( item => <Feed key={item} title={item.title} url={item.url} explanation={item.explanation} />)
+				}
+		</div>
   )
   }
 }
