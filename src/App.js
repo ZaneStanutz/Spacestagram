@@ -30,12 +30,16 @@ class Feed extends React.Component{
 class Form extends React.Component{
   constructor(props){
   super(props);
+
 	const curDate = new Date();
 	const offset = curDate.getTimezoneOffset();
 	const todayGeoParam = new Date(curDate.getTime() - (offset*60*1000));
-	const dateForm = todayGeoParam.toISOString().split('T')[0];
+	const curDateForm = todayGeoParam.toISOString().split('T')[0];
 
-  this.state = {startDate: dateForm, endDate: dateForm, data: {goodcolor: 'Blue'} };
+	var sevenDaysPrior = new Date(new Date().setDate(new Date().getDate() - 7));
+	const sevenDaysPriorForm = sevenDaysPrior.toISOString().split('T')[0];
+
+  this.state = {startDate: sevenDaysPriorForm , endDate: curDateForm, data: {goodcolor: 'Blue'} };
   this.handleStart = this.handleStart.bind(this);
   this.handleEnd = this.handleEnd.bind(this);
   this.handleSubmit = this.handleSubmit.bind(this);
@@ -57,6 +61,7 @@ class Form extends React.Component{
 		
   }
   render() {
+		/* +TODO hanle error  (Date must be between  jun 16 1995 and today)*/
 		const response = this.state.data;
 		const arr = [];
 		Object.keys(response).forEach(function(key){
