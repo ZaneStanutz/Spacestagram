@@ -1,5 +1,5 @@
 import logo from './logo.svg';
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
 
 function Header() {
@@ -14,82 +14,59 @@ return (
     </>
   )
 }
+function Feed(){}
 
-function Feed(){
-  const [startDate, setStart] = useState("2022-01-01");
-  const[endDate, setEnd] = useState("2022-03-01");
-  const[data, setData] = useState(null);
-  
-  function handleSubmit(){
-    const handleStartChange = e => {
-      setStart(e.target.value)
-    };
-    const handleEndChange = e => {
-      setEnd(e.target.value)
-    }
+class Form extends React.Component{
+  constructor(props){
+  super(props);
+  this.state = {startDate: '', endDate: '', data: null };
+  this.handleStart = this.handleStart.bind(this);
+  this.handleEnd = this.handleEnd.bind(this);
+  this.handleSubmit = this.handleSubmit.bind(this);
   }
-  
-  useEffect(() => {
-    fetch(`https://api.nasa.gov/planetary/apod?api_key=e8K3ePSnMPazfDhsoTb4hJwJiu3yO3gCIY2zd6cb&start_date=${startDate}&end_date=${endDate}`)
-      .then(res => res.json())
-      .then(setData)
-      .catch(console.error);
-  },[startDate, endDate]); 
-  if(data){
-    return(
-      <>
-        <div>
-          <form onSubmit={handleSubmit}>
-            <label>Start Year</label>
-            <input 
-              id='start' 
-              type="date" 
-              name="start" 
-              value={startDate} 
-              placeholder="yy-mm-dd" 
-              required/>
-            <label>End Year</label>
-            <input 
-              id='end' 
-              type="date" 
-              name="end"
-              value={endDate}
-              placeholder="yy-mm-dd" 
-              required/>
-            <button type='submit'>Find pictures</button>
-          </form>
-        </div>
-        <div className="Feed">
-          <h1>{JSON.stringify(data)}</h1>
-        </div>
-      </>
-    )
-  }else{
-    return(
-      <>
-        <form onSubmit={handleSubmit}>
-            <label>Start Year</label>
-            <input 
-              id='start' 
-              type="date" 
-              name="start" 
-              value={startDate} 
-              placeholder="yy-mm-dd" 
-              required/>
-            <label>End Year</label>
-            <input 
-              id='end' 
-              type="date" 
-              name="end"
-              value={endDate}
-              placeholder="yy-mm-dd" 
-              required/>
-            <button type='submit'>Find pictures</button>
-        </form>
-        <h2>Nasa is down :( </h2>
-      </>
+  handleStart(event){
+    this.setState({startDate: event.target.value});
+  }
 
-    )
+  handleEnd(event){
+    this.setState({endDate: event.target.value});
+  }
+
+  handleSubmit(event){
+    fetch(`https://api.nasa.gov/planetary/apod?api_key=e8K3ePSnMPazfDhsoTb4hJwJiu3yO3gCIY2zd6cb&start_date=${this.state.startDate}&end_date=${this.state.endDate}`)
+      .then(res => this.setState({ data: res.json()}))
+      .then(alert(this.props))
+      .catch(console.error);
+    event.preventDefault();
+  }
+  render() {
+  return(
+    <div>
+      <form onSubmit={this.handleSubmit}>
+        <label>Start Year</label>
+        <input 
+          id='start' 
+          type="date" 
+          name="start" 
+          value={this.state.startDate}
+          onChange={this.handleStart}
+          placeholder="yyyy-mm-dd" 
+          required/>
+        <label>End Year</label>
+        <input 
+          id='end' 
+          type="date" 
+          name="end"
+          value={this.state.endDate} 
+          onChange={this.handleEnd}
+          placeholder="yyyy-mm-dd" 
+          required/>
+        <button type='submit'>Find pictures</button>
+        <div>{}
+        </div>
+      </form>
+    </div>
+  )
   }
 }
 
@@ -97,16 +74,7 @@ function App() {
   return (
     <div className="App">
       <Header/>
-      <Feed/>
-    </div>
-  );
-}
-
-function AppOverload(start,end) {
-  return (
-    <div className="App">
-      <Header/>
-      <Feed start={start} end={end}/>
+      <Form/>
     </div>
   );
 }
