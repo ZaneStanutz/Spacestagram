@@ -18,7 +18,8 @@ class Feed extends React.Component{
   render(){
   return(
     <div>
-      <h3>{this.props.title}</h3>
+      <h1>{this.props.title}</h1>
+			<h3>{this.props.date}</h3>
       <img src={this.props.url}></img>
       <p>{this.props.explanation}</p>
     </div>
@@ -29,7 +30,12 @@ class Feed extends React.Component{
 class Form extends React.Component{
   constructor(props){
   super(props);
-  this.state = {startDate: '', endDate: '', data: {status: "Search for some dates"} };
+	const curDate = new Date();
+	const offset = curDate.getTimezoneOffset();
+	const todayGeoParam = new Date(curDate.getTime() - (offset*60*1000));
+	const dateForm = todayGeoParam.toISOString().split('T')[0];
+
+  this.state = {startDate: dateForm, endDate: dateForm, data: {goodcolor: 'Blue'} };
   this.handleStart = this.handleStart.bind(this);
   this.handleEnd = this.handleEnd.bind(this);
   this.handleSubmit = this.handleSubmit.bind(this);
@@ -42,12 +48,13 @@ class Form extends React.Component{
     this.setState({endDate: event.target.value});
   }
 
-  handleSubmit(event){
+ 	handleSubmit(event){
     fetch(`https://api.nasa.gov/planetary/apod?api_key=e8K3ePSnMPazfDhsoTb4hJwJiu3yO3gCIY2zd6cb&start_date=${this.state.startDate}&end_date=${this.state.endDate}`)
       .then(res => res.json())
 			.then(data => this.setState({data: data}))
       .catch(console.error);
     event.preventDefault();
+		
   }
   render() {
 		const response = this.state.data;
@@ -66,7 +73,7 @@ class Form extends React.Component{
           value={this.state.startDate}
           onChange={this.handleStart}
           placeholder="yyyy-mm-dd" 
-          required/>
+          required/><br></br>
         <label>End Year</label>
         <input 
           id='end' 
@@ -75,16 +82,22 @@ class Form extends React.Component{
           value={this.state.endDate} 
           onChange={this.handleEnd}
           placeholder="yyyy-mm-dd" 
-          required/>
+          required/><br></br>
         <button type='submit'>Find pictures</button>
        
     	</form>
 				{
-					arr.map( item => <Feed key={item} title={item.title} url={item.url} explanation={item.explanation} />)
+					arr.map( item => <Feed key={item.date} date={item.date} title={item.title} url={item.url} explanation={item.explanation} />)
 				}
 		</div>
   )
   }
+	async componentDidMount(){
+		const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=e8K3ePSnMPazfDhsoTb4hJwJiu3yO3gCIY2zd6cb&start_date=${this.state.startDate}&end_date=${this.state.endDate}`);
+		const data = await response.json();
+		this.setState({data: data});
+	}
+
 }
 
 function App() {
