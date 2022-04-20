@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import React, {useState, useEffect} from 'react';
 import './App.css';
+import Heart from 'react-animated-heart';
 
 function Header() {
   function logMsg(){
@@ -12,8 +13,17 @@ return (
     <>
       <h1>SPACESTAGRAM</h1>
     </>
-  )
+  );
 }
+
+function ClickMe(){
+    const[isClick,setClick] = useState(false);
+    return(
+      <div className="heart">
+        <Heart isClick={isClick} onClick={() => setClick(!isClick)}/>
+      </div>
+    );
+} 
 class Feed extends React.Component{
   render(){
   return(
@@ -22,6 +32,7 @@ class Feed extends React.Component{
 			<h3>{this.props.date}</h3>
       <img src={this.props.url}></img>
       <p>{this.props.explanation}</p>
+      <ClickMe/>
     </div>
   )
   }
@@ -58,28 +69,33 @@ class Form extends React.Component{
 			.then(data => this.setState({data: data}))
       .catch(console.error);
     event.preventDefault();
-		
   }
+
   render() {
-		/* +TODO hanle error  (Date must be between  jun 16 1995 and today)*/
+		/* 
+			threeJs infinite scroll...
+		
+		*/
 		const response = this.state.data;
 		const arr = [];
 		Object.keys(response).forEach(function(key){
 			arr.push(response[key]);
 		});
+    arr.reverse();
   return(
     <div>
       <form onSubmit={this.handleSubmit}>
-        <label>Start Year</label>
+        <label>Start Date</label>
         <input 
           id='start' 
           type="date" 
           name="start" 
           value={this.state.startDate}
           onChange={this.handleStart}
-          placeholder="yyyy-mm-dd" 
+          placeholder="yyyy-mm-dd"
+          min="1995-06-16" 
           required/><br></br>
-        <label>End Year</label>
+        <label>End Date</label>
         <input 
           id='end' 
           type="date" 
