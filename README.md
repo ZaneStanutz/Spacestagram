@@ -1,7 +1,7 @@
 
 
-# SPACESTAGRAM
-    Do you look up at the sky and say Wooooow!! :milky_way:
+# SPACESTAGRAM :milky_way:
+    Do you look up at the sky and say Wooooow!! 
     Access the sky through this React Web App!
 
 ## Available Scripts
