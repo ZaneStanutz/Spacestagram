@@ -4,33 +4,21 @@ import './App.css';
 import Heart from 'react-animated-heart';
 import Spinner from './Loading';
 
-function Header() {
-  function logMsg(){
-    return(
-      console.log("Spacestagram")
-    )
-  }
-return (
-    <>
-      <h1>SPACESTAGRAM</h1>
-    </>
-  );
-}
 
 function ClickMe(){
-    const[isClick,setClick] = useState(false);
+    /* move state up to Form Component*/ 
+    const[isclick,setClick] = useState(false);
     return(
       <div className="heart">
-        <Heart isClick={isClick} onClick={() => setClick(!isClick)}/>
+        <Heart isClick={isclick} onClick={() => setClick(!isclick)}/>
       </div>
     );
 } 
 class Feed extends React.Component{
   render(){
   return(
-    <div>
+    <div className='card' key={this.key}>
       <h1>{this.props.title}</h1>
-			<h3>{this.props.date}</h3>
       <img src={this.props.url}></img>
       <p>{this.props.explanation}</p>
       <ClickMe/>
@@ -76,7 +64,7 @@ class Form extends React.Component{
   render() {
 		/* 
 			threeJs infinite scroll...
-		
+      styling...
 		*/
 		const response = this.state.data;
 		const arr = [];
@@ -85,8 +73,9 @@ class Form extends React.Component{
 		});
     arr.reverse();
   return(
-    <div>
-      <form onSubmit={this.handleSubmit}>
+    <div >
+      <form className='card' onSubmit={this.handleSubmit}>
+        <h1>SPACESTAGRAM</h1>
         <label>Start Date</label>
         <input 
           id='start' 
@@ -105,30 +94,28 @@ class Form extends React.Component{
           value={this.state.endDate} 
           onChange={this.handleEnd}
           placeholder="yyyy-mm-dd" 
+          max={this.state.endDate}
           required/><br></br>
         <button type='submit'>Find pictures</button>
         {this.state.loading ? <Spinner/> : ""}
     	</form>
 				{
-					arr.map( item => <Feed key={item.date} date={item.date} title={item.title} url={item.url} explanation={item.explanation} />)
+					arr.map( item =>  <Feed key={item.date} title={item.title} url={item.url} explanation={item.explanation}/>)
 				}
 		</div>
     )
   }
-
 
 	async componentDidMount(){
 		const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=e8K3ePSnMPazfDhsoTb4hJwJiu3yO3gCIY2zd6cb&start_date=${this.state.startDate}&end_date=${this.state.endDate}`);
 		const data = await response.json();
 		this.setState({data: data, loading: false});
 	}
-
 }
 
 function App() {
   return (
     <div className="App">
-      <Header/>
       <Form/>
     </div>
   );

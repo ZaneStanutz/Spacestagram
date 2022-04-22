@@ -21,18 +21,16 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 .App-link {
   color: #61dafb;
 }
-.Feed{
+.Feed {
   margin-top: 50px;
 }
-.FeedImg{
+.FeedImg {
   width: 900px;
-  
 }
 
 @keyframes App-logo-spin {
@@ -43,3 +41,18 @@
     transform: rotate(360deg);
   }
 }
+
+.card {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: rgba(71, 53, 234, 0.103) 10px 0.15rem 0.5rem, rgba(71, 53, 234, 0.103) 0px 1rem 1rem;
+  border-radius: 4px;
+  transition: all 500ms;
+  overflow: hidden; 
+  padding: 15px;
+  margin-bottom: 50px; 
+}
+
