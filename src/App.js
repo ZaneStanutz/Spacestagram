@@ -1,29 +1,30 @@
-import logo from './logo.svg';
+
 import React, {useState, useEffect} from 'react';
 import './App.css';
 import Heart from 'react-animated-heart';
-import Spinner from './Loading';
+import Spinner from './Loading'; 
 
 
 function ClickMe(){
     /* move state up to Form Component*/ 
-    const[isclick,setClick] = useState(false);
+    const[isclick,setclick] = useState(false);
     return(
       <div className="heart">
-        <Heart isClick={isclick} onClick={() => setClick(!isclick)}/>
+        <Heart isClick={isclick} onClick={() => setclick(!isclick)}/>
       </div>
     );
 } 
+
 class Feed extends React.Component{
-  render(){
+  render(props){
   return(
-    <div className='card' key={this.key}>
+    <div className='card' key={this.props.value}>
       <h1>{this.props.title}</h1>
       <img src={this.props.url}></img>
       <p>{this.props.explanation}</p>
       <ClickMe/>
     </div>
-  )
+    )
   }
 }
 
@@ -71,9 +72,9 @@ class Form extends React.Component{
 		Object.keys(response).forEach(function(key){
 			arr.push(response[key]);
 		});
-    arr.reverse();
+
   return(
-    <div >
+    <div>
       <form className='card' onSubmit={this.handleSubmit}>
         <h1>SPACESTAGRAM</h1>
         <label>Start Date</label>
@@ -98,11 +99,12 @@ class Form extends React.Component{
           required/><br></br>
         <button type='submit'>Find pictures</button>
         {this.state.loading ? <Spinner/> : ""}
-    	</form>
-				{
-					arr.map( item =>  <Feed key={item.date} title={item.title} url={item.url} explanation={item.explanation}/>)
-				}
+      </form>
+        {
+          arr.map( item =>  <Feed key={item.date} title={item.title} url={item.url} explanation={item.explanation}/>)
+        }
 		</div>
+    
     )
   }
 
@@ -114,10 +116,10 @@ class Form extends React.Component{
 }
 
 function App() {
-  return (
-    <div className="App">
-      <Form/>
-    </div>
+  return ( 
+      <div className="App">
+        <Form/>
+      </div>
   );
 }
 
