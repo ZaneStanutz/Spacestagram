@@ -4,7 +4,6 @@ import './App.css';
 import Heart from 'react-animated-heart';
 import Spinner from './Loading'; 
 
-
 function ClickMe(){
     /* move state up to Form Component*/ 
     const[isclick,setclick] = useState(false);
@@ -16,10 +15,10 @@ function ClickMe(){
 } 
 
 class Feed extends React.Component{
-  render(props){
+  render(){
   return(
     <div className='card' key={this.props.value}>
-      <h1>{this.props.title}</h1>
+      <h2>{this.props.title}</h2>
       <img src={this.props.url}></img>
       <p>{this.props.explanation}</p>
       <ClickMe/>
@@ -63,10 +62,6 @@ class Form extends React.Component{
   }
 
   render() {
-		/* 
-			threeJs infinite scroll...
-      styling...
-		*/
 		const response = this.state.data;
 		const arr = [];
 		Object.keys(response).forEach(function(key){
@@ -101,13 +96,11 @@ class Form extends React.Component{
         {this.state.loading ? <Spinner/> : ""}
       </form>
         {
-          arr.map( item =>  <Feed key={item.date} title={item.title} url={item.url} explanation={item.explanation}/>)
+          arr.map( item => <Feed key={item.date} title={item.title} url={item.url} explanation={item.explanation}/>)
         }
 		</div>
-    
-    )
+    );
   }
-
 	async componentDidMount(){
 		const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=e8K3ePSnMPazfDhsoTb4hJwJiu3yO3gCIY2zd6cb&start_date=${this.state.startDate}&end_date=${this.state.endDate}`);
 		const data = await response.json();
